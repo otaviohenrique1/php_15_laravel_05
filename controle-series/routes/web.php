@@ -24,18 +24,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('/series', SeriesController::class)->except(['show']);
 
-Route::middleware('autenticador')->group(function() {
+Route::middleware('autenticador')->group(function () {
     Route::get('/', function () {
         return redirect('/series');
         // return view('welcome');
     })
-    // ->middleware(Autenticador::class)
+        // ->middleware(Autenticador::class)
     ;
 
     Route::get('/series/{series}/seasons', [SeasonsController::class, 'index'])
         ->name("seasons.index")
         // ->middleware('autenticador')
-        ;
+    ;
 
     Route::get('seasons/{season}/episodes', [EpisodeController::class, 'index'])->name("episodes.index");
     Route::post('seasons/{season}/episodes', [EpisodeController::class, 'update'])->name("episodes.update");
@@ -51,7 +51,7 @@ Route::get('/register', [UsersController::class, 'create'])->name('users.create'
 
 Route::post('/register', [UsersController::class, 'store'])->name('users.store');
 
-Route::get('/email', function() {
+Route::get('/email', function () {
     return new SeriesCreated(
         'Série de teste',
         16,
