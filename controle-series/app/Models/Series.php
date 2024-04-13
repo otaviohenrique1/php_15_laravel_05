@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Series extends Model
 {
     use HasFactory;
     protected $fillable = ['nome', 'cover'];
     // protected $with = ['seasons'];
+    protected $appends = ['links'];
 
     public function seasons()
     {
@@ -26,5 +28,25 @@ class Series extends Model
         self::addGlobalScope('ordered', function (Builder $queryBuilder) {
             $queryBuilder->orderBy('nome');
         });
+    }
+
+    public function links(): Attribute
+    {
+        return new Attribute(
+            get: fn () => [
+                [
+                    'rel' => 'self',
+                    'url' => "/api/series/{$this->id}",
+                ],
+                [
+                    'rel' => 'self',
+                    'url' => "/api/series/{$this->id}/seasons",
+                ],
+                [
+                    'rel' => 'self',
+                    'url' => "/api/series/{$this->id}/episodes",
+                ],
+            ]
+        );
     }
 }
